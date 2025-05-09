@@ -313,14 +313,10 @@ def load_checkpoint(model, optimizer, scheduler, filename=CHECKPOINT, device="cu
     if scheduler is not None and checkpoint["scheduler_state_dict"] is not None:
         scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
     
-    start_epoch = checkpoint["epoch"]
-    loss = checkpoint["loss"]
-    valid_loss = checkpoint["valid_loss"]
-    valid_counter = checkpoint["valid_counter"]
-    if valid_loss is None:
-        valid_loss = float('inf')
-    if valid_counter is None:
-        valid_counter = 0
+    start_epoch = checkpoint.get("epoch", 0)
+    loss = checkpoint.get("loss", float('inf'))
+    valid_loss = checkpoint.get("valid_loss", float('inf'))
+    valid_counter = checkpoint.get("valid_counter", 0)
     print(f"Loaded checkpoint '{filename}' (epoch {checkpoint['epoch']})")
     return start_epoch, loss, valid_loss, valid_counter
 

@@ -1,0 +1,9 @@
+pipdeptree
+torch
+torchvision
+torchaudio
+tqdm
+pillow
+
+# Mean: tensor([0.4701, 0.4468, 0.4076])
+# Std: tensor([0.2341, 0.2291, 0.2326])

@@ -317,6 +317,10 @@ def load_checkpoint(model, optimizer, scheduler, filename=CHECKPOINT, device="cu
     loss = checkpoint["loss"]
     valid_loss = checkpoint["valid_loss"]
     valid_counter = checkpoint["valid_counter"]
+    if valid_loss is None:
+        valid_loss = float('inf')
+    if valid_counter is None:
+        valid_counter = 0
     print(f"Loaded checkpoint '{filename}' (epoch {checkpoint['epoch']})")
     return start_epoch, loss, valid_loss, valid_counter
 

@@ -9,8 +9,9 @@ from model.model_v2 import SteganoModel
 import torchvision.transforms.v2 as v2
 from torchvision.transforms.v2.functional import to_pil_image
 
-# model_dir = 'Model_v4/stegano_model_final.pth'
-model_dir = 'Model_v2/stegano_model_final.pth'
+# model_dir = 'Model_v2/stegano_model_final.pth'
+model_dir = 'Model_v4/stegano_model_final.pth'
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 

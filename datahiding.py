@@ -11,7 +11,7 @@ import text2image as tti
 
 # Config
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-MODEL_PATH = "Model_v2/stegano_model_final.pth"
+MODEL_PATH = "Model_v4/stegano_model_final.pth"
 MAX_LENGTH = 1080
 
 # Load model

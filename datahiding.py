@@ -106,9 +106,7 @@ def encode(cover_path, stego_path, secret_path):
         pad_h = cover_h - secret_h
         pad_w = cover_w - secret_w
     if pad_h > 0 or pad_w > 0:
-        pad_h = int(pad_h / 2)
-        pad_w = int(pad_w / 2)
-        secret_tensor = F.pad(secret_tensor, (pad_w, pad_w, pad_h, pad_h), "constant", 0)
+        secret_tensor = F.pad(secret_tensor, (0, pad_w, 0, pad_h), "constant", 0)
     
     # Forward pass
     with torch.no_grad():

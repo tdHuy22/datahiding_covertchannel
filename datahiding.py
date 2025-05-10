@@ -12,6 +12,7 @@ import text2image as tti
 # Config
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 MODEL_PATH = "Model_v4/stegano_model_final.pth"
+MAX_LENGTH = 1080
 
 # Load model
 if not os.path.exists(MODEL_PATH):
@@ -27,6 +28,23 @@ transform = v2.Compose([
     v2.ToDtype(torch.float32, scale=True),
 ])
 
+def scale_image(img, target_size):
+    img_width, img_height = img.size
+    if img_width > target_size or img_height > target_size:
+        scale = min(target_size / img_width, target_size / img_height)
+        new_size = (int(img_width * scale), int(img_height * scale))
+        print(f"Resizing image from {img.size} to {new_size}")
+        img = img.resize(new_size, 1)
+    return img
+
+def get_image_ratio(img):
+    width, height = img.size
+    if width > height:
+        ratio = width / height
+    else:
+        ratio = height / width
+    return ratio
+
 def save_image(tensor, save_path):
     tensor_image = torch.clamp(tensor, 0, 1)
     image = to_pil_image(tensor_image.squeeze(0).cpu()).convert("RGB")
@@ -34,28 +52,54 @@ def save_image(tensor, save_path):
 
 # Encode function
 def encode(cover_path, stego_path, secret_path):
-    # Load cover image
-    cover_img = Image.open(cover_path).convert("RGB")
-    cover_tensor = transform(cover_img).unsqueeze(0).to(DEVICE)
-    
-    # Load or create secret
     if secret_path.endswith('.jpg') or secret_path.endswith('.png'):
+        cover_img = Image.open(cover_path).convert("RGB")
         secret_img = Image.open(secret_path).convert("RGB")
-        secret_tensor = transform(secret_img).unsqueeze(0).to(DEVICE)
-    elif secret_path.endswith('.txt'):
         cover_size = cover_img.size
-        print(f"Cover size (width x height): {cover_size}")
+        secret_size = secret_img.size
+        cover_ratio = get_image_ratio(cover_img)
+        secret_ratio = get_image_ratio(secret_img)
+        print(f"Cover image size (width x height): {cover_size}")
+        print(f"Secret image size (width x height): {secret_size}")
+
+        if cover_size[0] < secret_size[0] or cover_size[1] < secret_size[1]:
+            raise ValueError("Cover image is smaller than secret image")
+        if cover_size[0] > MAX_LENGTH or cover_size[1] > MAX_LENGTH:
+            print("WARNING: Cover image is too large (> 1080 pixels) that it may take a very long time to encode.")
+            decision = input("Press [Y/y] to resize or [N/n] to continue: ")
+            if decision.lower() == 'y':
+                cover_img = scale_image(cover_img, MAX_LENGTH)
+        cover_size = cover_img.size
+        if cover_size[0] < secret_size[0] or cover_size[1] < secret_size[1]:
+            print("Resizing secret image to fit cover image")
+            if cover_ratio > secret_ratio:
+                secret_img = scale_image(secret_img, int(MAX_LENGTH / cover_ratio))
+            else:
+                secret_img = scale_image(secret_img, MAX_LENGTH)
+    elif secret_path.endswith('.txt'):
+        cover_img = Image.open(cover_path).convert("RGB")
+        cover_size = cover_img.size
+
+        print(f"Cover image size (width x height): {cover_size}")
+        if cover_size[0] > MAX_LENGTH or cover_size[1] > MAX_LENGTH:
+            print("WARNING: Cover image is too large (> 1080 pixels) that it may take a very long time to encode.")
+            decision = input("Press [Y/y] to resize or [N/n] to continue: ")
+            if decision.lower() == 'y':
+                cover_img = scale_image(cover_img, MAX_LENGTH)
+
+        cover_size = cover_img.size
+        print(f"Cover image size (width x height) after resized: {cover_size}")
         lines = tti.text_lines(secret_path)
         secret_img = tti.lines_image(lines, image_size=cover_size)
-        secret_tensor = transform(secret_img).unsqueeze(0).to(DEVICE)
     else:
         raise ValueError("Unsupported secret format")
     
+    cover_tensor = transform(cover_img).unsqueeze(0).to(DEVICE)
+    secret_tensor = transform(secret_img).unsqueeze(0).to(DEVICE)
+
     _, _, secret_h, secret_w = secret_tensor.shape
     _, _, cover_h, cover_w = cover_tensor.shape
 
-    if secret_h > cover_h or secret_w > cover_w:
-        raise ValueError("Secret image is larger than cover image")
     pad_h = 0
     pad_w = 0
     if cover_h > secret_h or cover_w > secret_w:

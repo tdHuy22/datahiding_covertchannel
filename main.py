@@ -70,9 +70,8 @@ def decode(stego_path, reveal_path):
     save_tensor_as_image(revealed_tensor, reveal_path)
 
 if __name__ == "__main__":
-    # main()
-    cover_path = "test/1024x1024_Cover.jpg"  
-    secret_path = "test/1024x1024_Secret.jpg"  
+    cover_path = "test/1024x1024_Cover.jpg.jpg"  
+    secret_path = "test/1024x1024_Secret.jpg.jpg"  
 
     stego_path = "output/stego_image.png"  
     reveal_path = "output/reveal_image.png"  

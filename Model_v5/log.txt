@@ -1,0 +1,67 @@
+Training started...
+Epoch [1/20], Total_Loss_Epoch: 0.0415, Validation_Loss: 0.0254
+Validation loss improved to 0.0254 at epoch 1
+
+Epoch [2/20], Total_Loss_Epoch: 0.0307, Validation_Loss: 0.0251
+Validation loss improved to 0.0251 at epoch 2
+
+Epoch [3/20], Total_Loss_Epoch: 0.0272, Validation_Loss: 0.0209
+Validation loss improved to 0.0209 at epoch 3
+
+Epoch [4/20], Total_Loss_Epoch: 0.0235, Validation_Loss: 0.0161
+Validation loss improved to 0.0161 at epoch 4
+
+Epoch [5/20], Total_Loss_Epoch: 0.0212, Validation_Loss: 0.0169
+Validation loss did not improve. Patience counter: 1/5
+
+Continuous training started...
+Epoch [6/20], Total_Loss_Epoch: 0.0198, Validation_Loss: 0.0139
+Validation loss improved to 0.0139 at epoch 6
+
+Epoch [7/20], Total_Loss_Epoch: 0.0187, Validation_Loss: 0.0129
+Validation loss improved to 0.0129 at epoch 7
+
+Epoch [8/20], Total_Loss_Epoch: 0.0181, Validation_Loss: 0.0185
+Validation loss did not improve. Patience counter: 1/5
+
+Epoch [9/20], Total_Loss_Epoch: 0.0174, Validation_Loss: 0.0134
+Validation loss did not improve. Patience counter: 2/5
+
+Continuous training started...
+Epoch [10/20], Total_Loss_Epoch: 0.0170, Validation_Loss: 0.0125
+Validation loss improved to 0.0125 at epoch 10
+
+Epoch [11/20], Total_Loss_Epoch: 0.0166, Validation_Loss: 0.0138
+Validation loss did not improve. Patience counter: 1/5
+
+Epoch [12/20], Total_Loss_Epoch: 0.0162, Validation_Loss: 0.0122
+Validation loss improved to 0.0122 at epoch 12
+
+Epoch [13/20], Total_Loss_Epoch: 0.0158, Validation_Loss: 0.0118
+Validation loss improved to 0.0118 at epoch 13
+
+Epoch [14/20], Total_Loss_Epoch: 0.0155, Validation_Loss: 0.0131
+Validation loss did not improve. Patience counter: 1/5
+
+Continuous training started...
+Epoch [15/20], Total_Loss_Epoch: 0.0152, Validation_Loss: 0.0140
+Validation loss improved to 0.0140 at epoch 15
+
+Epoch [16/20], Total_Loss_Epoch: 0.0149, Validation_Loss: 0.0123
+Validation loss improved to 0.0123 at epoch 16
+
+Epoch [17/20], Total_Loss_Epoch: 0.0147, Validation_Loss: 0.0146
+Validation loss did not improve. Patience counter: 1/5
+
+Epoch [18/20], Total_Loss_Epoch: 0.0145, Validation_Loss: 0.0129
+Validation loss did not improve. Patience counter: 2/5
+
+Epoch [19/20], Total_Loss_Epoch: 0.0143, Validation_Loss: 0.0131
+Validation loss did not improve. Patience counter: 3/5
+
+Continuous training started...
+Epoch [20/20], Total_Loss_Epoch: 0.0141, Validation_Loss: 0.0110
+Validation loss improved to 0.0110 at epoch 20
+
+Average PSNR (Cover): 30.3018, Average SSIM (Cover): 0.9906
+Average PSNR (Secret): 24.4369, Average SSIM (Secret): 0.9616

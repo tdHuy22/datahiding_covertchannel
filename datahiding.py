@@ -11,7 +11,7 @@ import text2image as tti
 
 # Config
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-MODEL_PATH = "Model_v4/stegano_model_final.pth"
+MODEL_PATH = "Model_v2/stegano_model_final.pth"
 MAX_LENGTH = 1080
 
 # Load model
@@ -86,9 +86,9 @@ def encode(cover_path, stego_path, secret_path):
             decision = input("Press [Y/y] to resize or [N/n] to continue: ")
             if decision.lower() == 'y':
                 cover_img = scale_image(cover_img, MAX_LENGTH)
+                cover_size = cover_img.size
+                print(f"Resized cover image size (width x height): {cover_size}")
 
-        cover_size = cover_img.size
-        print(f"Cover image size (width x height) after resized: {cover_size}")
         lines = tti.text_lines(secret_path)
         secret_img = tti.lines_image(lines, image_size=cover_size)
     else:
@@ -106,7 +106,9 @@ def encode(cover_path, stego_path, secret_path):
         pad_h = cover_h - secret_h
         pad_w = cover_w - secret_w
     if pad_h > 0 or pad_w > 0:
-        secret_tensor = F.pad(secret_tensor, (0, pad_w, 0, pad_h), "constant", 0)
+        pad_h = int(pad_h / 2)
+        pad_w = int(pad_w / 2)
+        secret_tensor = F.pad(secret_tensor, (pad_w, pad_w, pad_h, pad_h), "constant", 0)
     
     # Forward pass
     with torch.no_grad():

@@ -1,29 +1,42 @@
 import os
 from PIL import Image, ImageDraw, ImageFont
-
+import platform
 from tkinter import Tk, font
 root = Tk()
 font_list = font.families()
 
 IMAGE_SIZE = 1024
+MIN_FONT_SIZE = 8
 TEXT_COLOR = (200, 200, 200)  
 BACKGROUND_COLOR = (100, 100, 100)
 
-if font_list.count("Times New Roman") > 0:
-    FONT_PATH = "Times New Roman.ttf"
-    print("Using Times New Roman font.")
-elif font_list.count("Arial") > 0:
-    FONT_PATH = "Arial.ttf"
-    print("Using Arial font.")
-elif font_list.count("arial"):
-    FONT_PATH = "arial.ttf"
-    print("Using arial font.")
-elif font_list.count("times new roman") > 0:
-    FONT_PATH = "times new roman.ttf"
-    print("Using times new roman font.")
+is_windows = platform.system() == "Windows"
+if is_windows:
+    if font_list.count("Times New Roman") > 0:
+        FONT_PATH = "times"
+        # print("Using Times New Roman font (Windows).")
+    elif font_list.count("Arial") > 0:
+        FONT_PATH = "arial"
+        # print("Using Arial font (Windows).")
+    else:
+        FONT_PATH = ImageFont.load_default()
+        # print("Default font will be used (Windows).")
 else:
-    FONT_PATH = ImageFont.load_default()
-    print("Default font will be used.")
+    if font_list.count("Times New Roman") > 0:
+        FONT_PATH = "Times New Roman.ttf"
+        # print("Using Times New Roman font.")
+    elif font_list.count("Arial") > 0:
+        FONT_PATH = "Arial.ttf"
+        # print("Using Arial font.")
+    elif font_list.count("arial"):
+        FONT_PATH = "arial.ttf"
+        # print("Using arial font.")
+    elif font_list.count("times new roman") > 0:
+        FONT_PATH = "times new roman.ttf"
+        # print("Using times new roman font.")
+    else:
+        FONT_PATH = ImageFont.load_default()
+        # print("Default font will be used.")
 
 def max_line_length(lines):
     idx_line = 0
@@ -35,7 +48,7 @@ def max_line_length(lines):
     return idx_line
 
 def scale_font(lines, draw, image_size):
-    font_size = 1
+    font_size = MIN_FONT_SIZE
     idx_max_line_len = max_line_length(lines)
     while True:
         font_temp = ImageFont.truetype(FONT_PATH, font_size)
@@ -79,15 +92,21 @@ def lines_image(lines, image_size=(IMAGE_SIZE, IMAGE_SIZE)):
     draw = ImageDraw.Draw(img)
 
     image_width, image_height = image_size
+    max_text_width = image_width/MIN_FONT_SIZE
+    max_text_height = image_height/MIN_FONT_SIZE
 
-    if FONT_PATH is None:
+    if len(lines) > max_text_height:
+        raise ValueError(f"Too many lines: {len(lines)}. Maximum allowed: {max_text_height}")
+    if len(lines[max_line_length(lines)]) > max_text_width:
+        raise ValueError(f"Line too long: {lines[max_line_length(lines)]}. Maximum allowed: {max_text_width}")
+
+    try:
+        print(f"Using font: {FONT_PATH}")
+        font = scale_font(lines, draw, image_size)
+    except Exception as e:
+        print(f"Error scaling font: {e}")
         font = ImageFont.load_default()
-    else:
-        try:
-            font = scale_font(lines, draw, image_size)
-        except Exception as e:
-            print(f"Error scaling font: {e}")
-            font = ImageFont.load_default()
+        print("Using default font.")
 
     if not valid_text_height(lines, draw, font, image_height):
         raise ValueError("Text height exceeds image height")

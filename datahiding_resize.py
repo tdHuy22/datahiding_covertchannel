@@ -51,7 +51,7 @@ def save_image(tensor, save_path):
     image.save(save_path)
 
 # Encode function
-def encode(cover_path, stego_path, secret_path):
+def encode(cover_path, stego_path, secret_path, is_resize):
     if secret_path.endswith('.jpg') or secret_path.endswith('.png'):
         cover_img = Image.open(cover_path).convert("RGB")
         secret_img = Image.open(secret_path).convert("RGB")
@@ -67,7 +67,15 @@ def encode(cover_path, stego_path, secret_path):
             if decision.lower() == 'y':
                 cover_img = scale_image(cover_img, MAX_LENGTH)
         cover_size = cover_img.size
-        secret_img = secret_img.resize(cover_size, 1)
+        if is_resize:
+            secret_img = secret_img.resize(cover_size, 1)
+        else:
+            if cover_size[0] < secret_size[0] or cover_size[1] < secret_size[1]:
+                print("Resizing secret image to fit cover image")
+                if cover_ratio > secret_ratio:
+                    secret_img = scale_image(secret_img, int(MAX_LENGTH / cover_ratio))
+                else:
+                    secret_img = scale_image(secret_img, MAX_LENGTH)
         
     elif secret_path.endswith('.txt'):
         cover_img = Image.open(cover_path).convert("RGB")
@@ -151,6 +159,7 @@ if __name__ == "__main__":
     encode_parser.add_argument("cover", help="Path to cover image")
     encode_parser.add_argument("--stego", default="dist/stego_image.png", help="Path to save stego image")
     encode_parser.add_argument("secret", help="Path to secret image or text file")
+    encode_parser.add_argument("--resize", action="store_true", help="Resize secret image to cover image size")
 
     decode_parser = subparsers.add_parser("decode", help="Extract secret from stego image")
     decode_parser.add_argument("stego", help="Path to stego image")
@@ -159,7 +168,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.command == "encode":
-        encode(args.cover, args.stego, args.secret)
+        encode(args.cover, args.stego, args.secret, args.resize)
     elif args.command == "decode":
         decode(args.stego, args.output)
     else:

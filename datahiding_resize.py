@@ -69,6 +69,7 @@ def encode(cover_path, stego_path, secret_path, is_resize):
         cover_size = cover_img.size
         if is_resize:
             secret_img = secret_img.resize(cover_size, 1)
+            print(f"Resized secret image size (width x height): {secret_img.size}")
         else:
             if cover_size[0] < secret_size[0] or cover_size[1] < secret_size[1]:
                 print("Resizing secret image to fit cover image")

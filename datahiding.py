@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import numpy as np
 import argparse
 from PIL import Image
 import torch
@@ -87,7 +88,7 @@ def save_image(tensor, save_path):
     image.save(save_path)
 
 # Encode function
-def encode(cover_path, stego_path, secret_path, is_resize):
+def encode(cover_path, stego_path, secret_path):
     cover_img = Image.open(cover_path).convert("RGB")
     if secret_path.endswith('.jpg') or secret_path.endswith('.png'):
         secret_img = Image.open(secret_path).convert("RGB")
@@ -225,7 +226,6 @@ if __name__ == "__main__":
     encode_parser.add_argument("cover", help="Path to cover image")
     encode_parser.add_argument("--stego", default="dist/stego_image.png", help="Path to save stego image")
     encode_parser.add_argument("secret", help="Path to secret image or text file")
-    encode_parser.add_argument("--resize", action="store_true", help="Resize secret image to cover image size")
 
     decode_parser = subparsers.add_parser("decode", help="Extract secret from stego image")
     decode_parser.add_argument("stego", help="Path to stego image")
@@ -234,7 +234,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.command == "encode":
-        encode(args.cover, args.stego, args.secret, args.resize)
+        encode(args.cover, args.stego, args.secret)
     elif args.command == "decode":
         decode(args.stego, args.output)
     else:

@@ -9,18 +9,21 @@ from model.model_v2 import SteganoModel
 import torchvision.transforms.v2 as v2
 from torchvision.transforms.v2.functional import to_pil_image
 
-# model_dir = 'Model_v2/stegano_model_final.pth'
-model_dir = 'Model_v4/stegano_model_final.pth'
+model_dir = 'Model_v2/stegano_model_final.pth'
+# model_dir = 'Model_v4/stegano_model_final.pth'
+# model_dir = 'Model_v5/stegano_model_final.pth'
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"Using device: {device}")
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+MAX_SIZE = 300
+MIN_SIZE = 100
+print(f"Using device: {DEVICE}")
 
 if not os.path.exists(model_dir):
     print(f"Trained model file '{model_dir}' not found!")
     raise FileNotFoundError(f"Trained model file '{model_dir}' not found!")
 
 model = SteganoModel()
-model.load_state_dict(torch.load(model_dir, map_location=device))
+model.load_state_dict(torch.load(model_dir, map_location=DEVICE))
 model.eval()
 
 transform = v2.Compose([
@@ -216,7 +219,7 @@ def decode(stego_path, output_path):
 
 if __name__ == "__main__":
     cover_path = "test/Cover_Square.jpg"  
-    secret_path = "test/Secret_Square.jpg"  
+    secret_path = "test/Secret_Square.jpg"
 
     stego_path = "dist/stego_image.png"  
     reveal_path = "dist/reveal_image.png"  

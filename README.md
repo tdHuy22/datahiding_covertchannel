@@ -12,7 +12,7 @@ Python files:
 - capacity.py: tính capacity thực tế
 - datahiding.py: chạy model, tương tác bằng cmd
 - evaluate.py: đánh PSNR, SSIM cho model
-- main.py: chạy model, encode -> decode, ra kết stego và reveal
+- main.py: chạy model, encode -> decode, ra kết quả stego và reveal
 - training_DP_v2.py: huấn luyện model v2
 - training_validating_testing_DP_v4.py: huấn luyện model v4
 - training_validating_testing_DP_v5.py: huấn luyện model v5

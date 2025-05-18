@@ -19,4 +19,4 @@ Python files:
 
 Link github (code, report): https://github.com/tdHuy22/datahiding_covertchannel
 
-Link drive (result train model, video demo, .exe): https://drive.google.com/drive/folders/1W-14XOks9B60QuS8X4j5l3Z1c3-8PnTL?usp=sharing
+Link drive (result train model, report, video demo, .exe): https://drive.google.com/drive/folders/1W-14XOks9B60QuS8X4j5l3Z1c3-8PnTL?usp=sharing

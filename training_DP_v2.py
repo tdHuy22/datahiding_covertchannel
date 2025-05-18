@@ -180,7 +180,7 @@ class SteganoModel(nn.Module):
 # Hyperparameters
 BATCH_SIZE = 8
 IMAGE_SIZE = 256
-EPOCHS = 15
+EPOCHS = 20
 LR = 0.0001
 WORKER = 4
 LAMBDA = 1
